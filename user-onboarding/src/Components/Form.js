@@ -7,6 +7,7 @@ const formSchema = yup.object().shape({
     email: yup.string().required("Please enter an email address"),
     password: yup.string().required("password must be included"),
     terms: yup.boolean().oneOf([true], "You must agree to terms!"),
+    motivation: yup.string().required("must include why you'd like to join")
 });
 
 
@@ -18,6 +19,7 @@ export default function Form(props) {
         email: "",
         password: "",
         terms: "",
+        motivation: "",
     })
 
     const [errors, setErrors] = useState({
@@ -25,6 +27,7 @@ export default function Form(props) {
         email: "",
         password: "",
         terms: "",
+        motivation: "",
 
     });
 
@@ -77,6 +80,7 @@ export default function Form(props) {
                     email: '',
                     password: '',
                     terms: '',
+                    motivation: '',
                 })
             }).catch(err => {
                 console.log(err.response);
@@ -115,7 +119,8 @@ export default function Form(props) {
                 </input>
                 {errors.email.length > 0 ? (<p className="error">{errors.name}</p>) : null}
             </label>
-
+            <br></br>
+            {/* adds ability to have input to email box */}
             <label htmlFor="email">
                 Email
                 <input
@@ -127,7 +132,8 @@ export default function Form(props) {
                 </input>
                 {errors.email.length > 0 ? (<p className="error">{errors.email}</p>) : null}
             </label>
-
+            <br></br>
+            {/* adds ability to have input to password box */}
             <label htmlFor="password">
                 Password
                 <input
@@ -139,6 +145,7 @@ export default function Form(props) {
                 </input>
                 {errors.password.length > 0 ? (<p className="error">{errors.password}</p>) : null}
             </label>
+            <br></br>
 
 
 
@@ -151,24 +158,46 @@ export default function Form(props) {
                 />
                 Terms and Conditions
       </label>
-            <label>
-                <input type="submit" value="Submit"></input>
+            <br></br>
+            <label htmlFor="motivation">
+                Why would you like to help?
+        <textarea
+                    name="motivation"
+                    value={formState.motivation}
+                    onChange={inputChange}
+                />
+                {errors.motivation.length > 0 ? (
+                    <p className="error">{errors.motivation}</p>
+                ) : null}
             </label>
+            <br></br>
+            <label htmlFor="positions">
+                What would you like to help with?
+        <select id="positions" name="positions" onChange={inputChange}>
+                    <option value="Manager">Manager</option>
+                    <option value="Customer Service">Customer Service</option>
+                    <option value="Head Coach">Head Coach</option>
+                    <option value="Assistant Coach">Assistant Coach</option>
+                    <option value="Trainer">Trainer</option>
+                </select>
+            </label>
+            <br></br>
+            <label htmlFor="terms" className="terms">
+                <input
+                    type="checkbox"
+                    name="terms"
+                    checked={formState.terms}
+                    onChange={inputChange}
+                />
+                Terms and Conditions
+      </label>
 
-            {/* <form onSubmit={formSubmit}>
-      <label htmlFor="name">
-        Name
-        <input
-          id="name"
-          type="text"
-          name="name"
-          value={formState.name}
-          onChange={inputChange}
-        /> */}
+            <pre>{JSON.stringify(users, null, 2)}</pre>
 
-            {/* <form onSubmit={formSubmit}> */}
+            {/* <label>
+                <input type="submit" value="Submit"></input>
+            </label> */}
+            <button disabled={buttonDisabled}>Submit</button>
         </form>
     )
 }
-
-
