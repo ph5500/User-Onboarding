@@ -28,6 +28,10 @@
   color: #61dafb;
 }
 
+body {
+  background-color: rgb(107, 65, 107);
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -35,4 +39,9 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+button {
+  color: blue;
+  background-color: lightgrey;
 }

@@ -120,6 +120,7 @@ export default function Form(props) {
                 {errors.email.length > 0 ? (<p className="error">{errors.name}</p>) : null}
             </label>
             <br></br>
+
             {/* adds ability to have input to email box */}
             <label htmlFor="email">
                 Email
@@ -132,6 +133,7 @@ export default function Form(props) {
                 </input>
                 {errors.email.length > 0 ? (<p className="error">{errors.email}</p>) : null}
             </label>
+            <br></br>
             <br></br>
             {/* adds ability to have input to password box */}
             <label htmlFor="password">
@@ -146,19 +148,11 @@ export default function Form(props) {
                 {errors.password.length > 0 ? (<p className="error">{errors.password}</p>) : null}
             </label>
             <br></br>
-
-
-
-            <label htmlFor="terms" className="terms">
-                <input
-                    type="checkbox"
-                    name="terms"
-                    checked={formState.terms}
-                    onChange={inputChange}
-                />
-                Terms and Conditions
-      </label>
             <br></br>
+
+
+            <br></br>
+
             <label htmlFor="motivation">
                 Why would you like to help?
         <textarea
@@ -171,6 +165,7 @@ export default function Form(props) {
                 ) : null}
             </label>
             <br></br>
+            <br></br>
             <label htmlFor="positions">
                 What would you like to help with?
         <select id="positions" name="positions" onChange={inputChange}>
@@ -181,6 +176,7 @@ export default function Form(props) {
                     <option value="Trainer">Trainer</option>
                 </select>
             </label>
+            <br></br>
             <br></br>
             <label htmlFor="terms" className="terms">
                 <input
