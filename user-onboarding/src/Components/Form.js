@@ -2,16 +2,12 @@ import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import * as yup from "yup";
 
-// const formSchema = yup.object().shape({
-//     name: yup.string().required("Name is a required field."),
-//     email: yup
-//         .string()
-//         .email("Must be a valid email address.")
-//         .required("Must include email address."),
-//     terms: yup.boolean().oneOf([true], "please agree to terms of use"),
-//     positions: yup.string(),
-//     motivation: yup.string().required("must include why you'd like to join")
-// });
+const formSchema = yup.object().shape({
+    name: yup.string().required("Name is a required field."),
+    email: yup.string().required("Please enter an email address"),
+    password: yup.string().required("password must be included"),
+    terms: yup.boolean().oneOf([true], "You must agree to terms!"),
+});
 
 
 
@@ -32,47 +28,116 @@ export default function Form(props) {
 
     });
 
+    const [buttonDisabled, setButtonDisabled] = useState(true);
 
+
+    const [users, setUsers] = useState([]);
+
+
+    useEffect(() => {
+        /* We pass the entire state into the entire schema, no need to use reach here. 
+        We want to make sure it is all valid before we allow a user to submit
+        isValid comes from Yup directly */
+        formSchema.isValid(formState).then(valid => {
+            setButtonDisabled(!valid);
+        });
+    }, [formState]);
+
+    const validateChange = change => {
+        // Reach will allow us to "reach" into the schema and test only one part.
+        yup
+            .reach(formSchema, change.target.name)
+            .validate(change.target.value)
+            .then(valid => {
+                setErrors({
+                    ...errors,
+                    [change.target.name]: ""
+                });
+            })
+            .catch(err => {
+                setErrors({
+                    ...errors,
+                    [change.target.name]: err.errors
+                });
+            });
+    };
+    //below we will include the axios post for our fake data
 
 
     const formSubmit = event => {
-        const inputChanged = event.target.name
-        const newValueInput = event.target.value
+        event.preventDefault();
+        axios
+            .post('https://reqres.in/api/user', formState)
+            .then(response => {
+                setUsers(response.data);
+                // console.log('success', users);
+
+                setFormState({
+                    name: '',
+                    email: '',
+                    password: '',
+                    terms: '',
+                })
+            }).catch(err => {
+                console.log(err.response);
+            })
+        // const inputChanged = event.target.name
+        // const newValueInput = event.target.value
     }
 
+    //input changes with persist below
 
 
 
-    // const validateChange = e => {
-    //     yup
-    //         .reach(formSchema, e.target.name)
-    //         .validate(e.target.value)
-    //         .then(valid => {
-    //             setErrors({
-    //                 ...errors,
-    //                 [e.target.name]: err.errors[0]
-    //             });
-    //         });
-    // };
+    const inputChange = e => {
+        e.persist();
+        const newFormData = {
+            ...formState,
+            [e.target.name]:
+                e.target.type === "checkbox" ? e.target.checked : e.target.value
+        };
+        validateChange(e);
+        setFormState(newFormData);
+    };
+
+
+
     return (
-        <form>
-            <label> Name
+        <form onSubmit={formSubmit}>
+            <label htmlFor="name">
+                Name
                 <input
+                    id='name'
                     name='name'
-                    type='text' />
-
+                    type='text'
+                    value={formState.name}
+                    onChange={inputChange}>
+                </input>
+                {errors.email.length > 0 ? (<p className="error">{errors.name}</p>) : null}
             </label>
 
-            <label> Email
+            <label htmlFor="email">
+                Email
                 <input
+                    id='email'
                     name='email'
-                    type='text' />
+                    type='text'
+                    value={formState.email}
+                    onChange={inputChange}>
+                </input>
+                {errors.email.length > 0 ? (<p className="error">{errors.email}</p>) : null}
             </label>
 
-            <label> Password
+            <label htmlFor="password">
+                Password
                 <input
+                    id='password'
                     name='password'
-                    type='text' />
+                    type='text'
+                    value={formState.password}
+                    onChange={inputChange}>
+                </input>
+                {errors.password.length > 0 ? (<p className="error">{errors.password}</p>) : null}
             </label>
 
 
@@ -81,8 +146,8 @@ export default function Form(props) {
                 <input
                     type="checkbox"
                     name="terms"
-                // checked={formState.terms}
-                // onChange={inputChange}
+                    checked={formState.terms}
+                    onChange={inputChange}
                 />
                 Terms and Conditions
       </label>
