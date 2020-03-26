@@ -7,7 +7,8 @@ const formSchema = yup.object().shape({
     email: yup.string().required("Please enter an email address"),
     password: yup.string().required("password must be included"),
     terms: yup.boolean().oneOf([true], "You must agree to terms!"),
-    motivation: yup.string().required("must include why you'd like to join")
+    motivation: yup.string().required("must include why you'd like to join"),
+    positions: yup.string()
 });
 
 
